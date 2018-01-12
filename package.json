@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "author": "Hong Jianwei <hjw3.9@foxmail.com>",
   "description": "An electron-vue project",
-  "license": null,
+  "license": "MIT",
   "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node .electron-vue/build.js",
@@ -21,8 +21,10 @@
     "postinstall": ""
   },
   "dependencies": {
-    "vue": "^2.3.3",
     "axios": "^0.16.1",
+    "element-ui": "^2.0.11",
+    "normalize.css": "^7.0.0",
+    "vue": "^2.3.3",
     "vue-electron": "^1.0.6",
     "vue-router": "^2.5.3",
     "vuex": "^2.3.1"
