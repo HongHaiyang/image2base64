@@ -4,14 +4,14 @@
       <el-header>图片转成 base64 编码</el-header>
       <el-main>
         <div class="converter-input">
-          <el-input  type="textarea" :rows="2" placeholder="请粘贴内容" v-on:paste.native="paste">
+          <el-input type="textarea" :rows="2" placeholder="请粘贴内容" v-on:paste.native="paste">
           </el-input>
         </div>
         <div class="converter-prompt">所粘贴图片：</div>
-        <img class="converter-img" :src="pasteImageData">
+        <img class="converter-img" :src="pasteImageData" />
         <div class="converter-button">
-        <el-button type="primary">一键复制 (&lt;img&gt;)</el-button>
-        <el-button type="primary" style="margin-left:6%;">一键复制 (markdown)</el-button>
+          <el-button type="primary" v-clipboard:copy="markdownData" v-clipboard:success="onCopy" v-clipboard:error="onError">一键复制 (markdown）</el-button>
+          <el-button type="primary" v-clipboard:copy="imgElementData" style="margin-left:6%;" v-clipboard:success="onCopy" v-clipboard:error="onError">一键复制 (&lt;img&gt;)</el-button>
         </div>
       </el-main>
     </el-container>
@@ -20,14 +20,26 @@
 </template>
 
 <script>
+  // import Clipboard from 'clipboard'
+
   export default {
     data() {
       return {
-        pasteImageData: ""
+        pasteImageData: "",
+        markdownImgSate: "",
+        markdownData: "",
+        imgElementData: ""
       }
     },
-    mounted() {},
+    mounted() {
+      // const clipboard = new Clipboard('.btn');
+      // clipboard.on('success', function (e) {
+      //     alert('1')
+      //     console.log(e);
+      //   });
+    },
     methods: {
+      // paste 事件
       paste(e) {
         if (!(e.clipboardData && e.clipboardData.items)) {
           return;
@@ -40,6 +52,8 @@
             if (pasteFile.size > 0 && pasteFile.type.match('^image/')) {
               console.log('图片')
               this.blobToBase64(pasteFile, (data) => {
+                this.markdownData = "![" + this.markdownImgSate + "](" + data + ")"
+                this.imgElementData = "<img src='" + data + "'>"
                 this.pasteImageData = data
               })
             }
@@ -48,12 +62,24 @@
           }
         }
       },
+      // blob 对象转为 base64 编码
       blobToBase64(blob, callback) {
         let reader = new FileReader();
         reader.onload = function (e) {
           callback(e.target.result);
         }
         reader.readAsDataURL(blob);
+      },
+      // 复制成功
+      onCopy() {
+        this.$message({
+          message: '复制成功',
+          type: 'success'
+        });
+      },
+      // 复制失败
+      onError(){
+        this.$message.error('复制失败');
       }
     }
   }
@@ -101,20 +127,21 @@
     width: 60%;
   }
 
-  .converter-prompt{
-    display:inline-block;
+  .converter-prompt {
+    display: inline-block;
     width: 60%;
     text-align: left;
     margin-top: 4%;
   }
 
-  .converter-img{
+  .converter-img {
     display: block;
     margin: 4% auto 0 auto;
     box-shadow: 1px 3px 8px grey;
   }
 
-  .converter-button{
+  .converter-button {
     margin-top: 4%;
   }
+
 </style>
