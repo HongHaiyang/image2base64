@@ -1,10 +1,13 @@
 <template>
-  <div>
-    <el-container>
+  <div style="height:100%;">
+    <el-container style="height:100%;">
       <el-header>图片转成 base64 编码</el-header>
       <el-main>
         <div class="converter-input">
           <el-input type="textarea" :rows="2" placeholder="请粘贴内容" v-on:paste.native="paste">
+          </el-input>
+          <el-input placeholder="可选" v-model="markdownImgSate" style="margin-top:4%;">
+            <template slot="prepend">Alt text</template>
           </el-input>
         </div>
         <div class="converter-prompt">所粘贴图片：</div>
@@ -20,27 +23,31 @@
 </template>
 
 <script>
-  // import Clipboard from 'clipboard'
 
   export default {
     data() {
       return {
         pasteImageData: "",
-        markdownImgSate: "",
-        markdownData: "",
-        imgElementData: ""
+        base64Data:"",
+        markdownImgSate: ""
+      }
+    },
+    computed:{
+      // 为 markdown 语法准备的字符串
+      markdownData(){
+        return "![" + this.markdownImgSate + "](" + this.base64Data + ")"
+      },
+      // 为 img 标签准备的字符串      
+      imgElementData(){
+        return "<img src='" + this.base64Data + "'>"
       }
     },
     mounted() {
-      // const clipboard = new Clipboard('.btn');
-      // clipboard.on('success', function (e) {
-      //     alert('1')
-      //     console.log(e);
-      //   });
     },
     methods: {
       // paste 事件
       paste(e) {
+        this.markdownImgSate=""        
         if (!(e.clipboardData && e.clipboardData.items)) {
           return;
         }
@@ -52,9 +59,8 @@
             if (pasteFile.size > 0 && pasteFile.type.match('^image/')) {
               console.log('图片')
               this.blobToBase64(pasteFile, (data) => {
-                this.markdownData = "![" + this.markdownImgSate + "](" + data + ")"
-                this.imgElementData = "<img src='" + data + "'>"
                 this.pasteImageData = data
+                this.base64Data=data
               })
             }
           } else {
@@ -78,7 +84,7 @@
         });
       },
       // 复制失败
-      onError(){
+      onError() {
         this.$message.error('复制失败');
       }
     }
@@ -106,6 +112,7 @@
     background-color: #f9f9f9;
     color: #333;
     text-align: center;
+    height: 100%;
     /* line-height: 160px; */
   }
 
@@ -143,5 +150,4 @@
   .converter-button {
     margin-top: 4%;
   }
-
 </style>
