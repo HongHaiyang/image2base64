@@ -28,17 +28,17 @@
     data() {
       return {
         pasteImageData: "",
-        base64Data:"",
+        base64Data: "",
         markdownImgSate: ""
       }
     },
-    computed:{
+    computed: {
       // 为 markdown 语法准备的字符串
-      markdownData(){
+      markdownData() {
         return "![" + this.markdownImgSate + "](" + this.base64Data + ")"
       },
       // 为 img 标签准备的字符串      
-      imgElementData(){
+      imgElementData() {
         return "<img src='" + this.base64Data + "'>"
       }
     },
@@ -47,7 +47,7 @@
     methods: {
       // paste 事件
       paste(e) {
-        this.markdownImgSate=""        
+        this.markdownImgSate = ""
         if (!(e.clipboardData && e.clipboardData.items)) {
           return;
         }
@@ -60,7 +60,7 @@
               console.log('图片')
               this.blobToBase64(pasteFile, (data) => {
                 this.pasteImageData = data
-                this.base64Data=data
+                this.base64Data = data
               })
             }
           } else {
