@@ -22,6 +22,11 @@
           <el-button type="primary" v-clipboard:copy="markdownData" v-clipboard:success="onCopy" v-clipboard:error="onError">一键复制 (markdown）</el-button>
           <el-button type="primary" v-clipboard:copy="imgElementData" style="margin-left:6%;" v-clipboard:success="onCopy" v-clipboard:error="onError">一键复制 (&lt;img&gt;)</el-button>
         </div>
+        <div class="tip">
+            Typora allows to use &lt;img&gt; tag for displaying images, such it can also be used to adjust the size of images.<br>
+            For example, you could specify the width or height attribute of an &lt;img&gt; tag, or set the width/height in its style attribute.<br>
+            Another common user case is that when you try to insert a retina image, and want to scale it to a “correct” size according, then you could specify a zoom factor in its style attribute.  
+        </div>
       </el-main>
     </el-container>
 
@@ -167,11 +172,21 @@
     margin: 2% auto 0 auto;
   }
 
+  .size-slider span {
+    color: #3692f1;
+  }
+
   .scale-value {
     display: flex;
   }
 
-  .size-slider span {
-    color: #3692f1;
+  .tip{
+    width: 60%;
+    margin: 2% auto 0 auto;
+    padding: 8px 16px;
+    background-color: #f3f0f0;
+    border-radius: 4px;
+    border-left: 5px solid #909399;
+    text-align: left;
   }
 </style>
