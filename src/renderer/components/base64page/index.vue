@@ -11,7 +11,13 @@
           </el-input>
         </div>
         <div class="converter-prompt">所粘贴图片：</div>
-        <img class="converter-img" :src="pasteImageData" />
+        <div class="size-slider" v-show="pasteImageData!==''">
+          <div class="scale-value">
+            <span>缩放比例：{{zoomScale}}%</span>
+          </div>
+          <el-slider :min="0" :max="200" v-model="zoomScale" @change="scaleChange"></el-slider>
+        </div>
+        <img class="converter-img" :style="{zoom:zoomScale/100}" :src="pasteImageData" />
         <div class="converter-button">
           <el-button type="primary" v-clipboard:copy="markdownData" v-clipboard:success="onCopy" v-clipboard:error="onError">一键复制 (markdown）</el-button>
           <el-button type="primary" v-clipboard:copy="imgElementData" style="margin-left:6%;" v-clipboard:success="onCopy" v-clipboard:error="onError">一键复制 (&lt;img&gt;)</el-button>
@@ -29,7 +35,8 @@
       return {
         pasteImageData: "",
         base64Data: "",
-        markdownImgSate: ""
+        markdownImgSate: "",
+        zoomScale: 100
       }
     },
     computed: {
@@ -39,12 +46,16 @@
       },
       // 为 img 标签准备的字符串      
       imgElementData() {
-        return "<img src='" + this.base64Data + "'>"
+        return "<img src='" + this.base64Data + "' alt='" + this.markdownImgSate + "' style='zoom:" + this.zoomScale / 100 + ";'>"
       }
     },
     mounted() {
     },
     methods: {
+      // 改变滑块的值
+      scaleChange(value) {
+        console.log(value)
+      },
       // paste 事件
       paste(e) {
         this.markdownImgSate = ""
@@ -149,5 +160,18 @@
 
   .converter-button {
     margin-top: 4%;
+  }
+
+  .size-slider {
+    width: 60%;
+    margin: 2% auto 0 auto;
+  }
+
+  .scale-value {
+    display: flex;
+  }
+
+  .size-slider span {
+    color: #3692f1;
   }
 </style>
